@@ -3,7 +3,7 @@
 namespace Innocode\WPThemeAssets;
 
 /**
- * Class Queue
+ * Class Manifest
  * @package Innocode\WPThemeAssets
  */
 final class Manifest
