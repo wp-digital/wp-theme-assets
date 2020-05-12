@@ -11,7 +11,7 @@ final class Queue
     /**
      * @var bool
      */
-    static $_is_public_path_set = false;
+    static $is_public_path_set = false;
 
     /**
      * Adds style to WordPress styles queue
@@ -49,12 +49,24 @@ final class Queue
      */
     public static function set_public_path( $handle )
     {
-        wp_localize_script(
+        $path = get_theme_file_uri( '/assets/build/' );
+
+        /**
+         * Integration with https://github.com/innocode-digital/wp-cdn
+         */
+        if (
+            defined( 'CDN_DOMAIN' ) &&
+            function_exists( 'get_cdn_attachment_url' )
+        ) {
+            $path = get_cdn_attachment_url( $path, true );
+        }
+
+        wp_add_inline_script(
             $handle,
-            '__PUBLIC_PATH__',
-            get_theme_file_uri( '/assets/build/' )
+            "var __PUBLIC_PATH__ = \"$path\";",
+            'before'
         );
-        static::$_is_public_path_set = true;
+        static::$is_public_path_set = true;
     }
 
     /**
@@ -62,7 +74,7 @@ final class Queue
      */
     public static function maybe_set_public_path( $handle )
     {
-        if ( ! static::$_is_public_path_set ) {
+        if ( ! static::$is_public_path_set ) {
             static::set_public_path( $handle );
         }
     }

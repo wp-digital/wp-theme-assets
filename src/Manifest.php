@@ -11,11 +11,11 @@ final class Manifest
     /**
      * @var string
      */
-    private static $_file = 'assets/build/manifest.json.php';
+    private static $file = 'assets/build/manifest.json.php';
     /**
      * @var array|null
      */
-    private static $_entries = null;
+    private static $entries = null;
 
     /**
      * Sets project manifest filename
@@ -24,7 +24,7 @@ final class Manifest
      */
     public static function set_file( $file )
     {
-        static::$_file = $file;
+        static::$file = $file;
     }
 
     /**
@@ -34,7 +34,7 @@ final class Manifest
      */
     public static function get_file()
     {
-        return get_theme_file_path( static::$_file );
+        return get_theme_file_path( static::$file );
     }
 
     /**
@@ -44,11 +44,11 @@ final class Manifest
      */
     public static function get_entries()
     {
-        if ( is_null( static::$_entries ) ) {
-            static::$_entries = static::_load_file();
+        if ( is_null( static::$entries ) ) {
+            static::$entries = static::load_file();
         }
 
-        return static::$_entries;
+        return static::$entries;
     }
 
     /**
@@ -56,7 +56,7 @@ final class Manifest
      *
      * @return array
      */
-    private static function _load_file()
+    private static function load_file()
     {
         $file = static::get_file();
 
