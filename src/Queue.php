@@ -40,14 +40,14 @@ final class Queue
     {
         if ( false !== ( $src = Helpers::url( $uri ) ) ) {
             wp_enqueue_script( $handle, $src, $deps, null, $in_footer );
-            static::maybe_set_public_path( $handle );
+            Queue::maybe_set_public_path( $handle );
         }
     }
 
     /**
-     * @param string $handle
+     * @return mixed
      */
-    public static function set_public_path( $handle )
+    public static function get_public_path()
     {
         $path = get_theme_file_uri( '/assets/build/' );
 
@@ -61,12 +61,23 @@ final class Queue
             $path = get_cdn_attachment_url( $path, true );
         }
 
+        return $path;
+    }
+
+    /**
+     * @param string $handle
+     */
+    public static function set_public_path( $handle )
+    {
+        $path = Queue::get_public_path();
+
         wp_add_inline_script(
             $handle,
             "var __PUBLIC_PATH__ = \"$path\";",
             'before'
         );
-        static::$is_public_path_set = true;
+
+        Queue::$is_public_path_set = true;
     }
 
     /**
@@ -74,8 +85,8 @@ final class Queue
      */
     public static function maybe_set_public_path( $handle )
     {
-        if ( ! static::$is_public_path_set ) {
-            static::set_public_path( $handle );
+        if ( ! Queue::$is_public_path_set ) {
+            Queue::set_public_path( $handle );
         }
     }
 }
